@@ -1,10 +1,17 @@
 import random
 import logging
 
-logging.basicConfig(level=logging.INFO, format="%(message)s")
+logging.basicConfig(level=logging.INFO, format="%(message)s",filename="def.log",filemode="a+")
 
 
 def guess_price_game() -> bool:
+    """
+        Игра «Угадай цену»: пользователь угадывает число от 100 до 10 000 за 7 попыток.
+
+        Returns:
+            bool: True если угадал, False если попытки исчерпаны.
+        """
+    # ... твой код ...
     target = random.randint(100, 10000)
 
     for attempt in range(1, 8):
@@ -32,7 +39,7 @@ def guess_price_game() -> bool:
     return False
 
 
-def main():
+def main() -> None:
     result = guess_price_game()
     print(f"Итог: {'Победа' if result else 'Поражение'}")
 

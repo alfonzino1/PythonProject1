@@ -18,6 +18,15 @@ def filter_outlirers (prices: List[int],low: int = 500, high: int =12000) -> Lis
     """Фильтрует выбросы: оставляет только цены в диапазоне [low, high]"""
     return [p for p in prices if low <= p <= high]
 
+"""
+result = []
+for p in prices:
+    if 500 <= p <= 12000:
+        result.append(p)
+return result
+"""
+
+
 def calculate_stats(prices: List[int]) -> dict:
     """Считает: count, mean, min, max. Обрабатывает пустой список."""
     if not prices:

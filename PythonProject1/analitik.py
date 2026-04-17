@@ -12,9 +12,9 @@
 import random
 from typing import List
 def generate_prices(count: int =100,min_val: int=100,max_val: int=15000)-> List[int]:
-    """Генерирую список случайный цен"""
+    """Генерирует список случайный цен"""
     return [random.randint(min_val, max_val) for _ in range(count)]
-def filter_outlires (prices: List[int],low: int = 500, high: int =12000) -> List[int]:
+def filter_outliers (prices: List[int], low: int = 500, high: int =12000) -> List[int]:
     """Фильтрует выбросы: оставляет только цены в диапазоне [low, high]"""
     return [p for p in prices if low <= p <= high]
 
@@ -34,14 +34,14 @@ def calculate_stats(prices: List[int]) -> dict:
     count = len(prices)
     return {
         "count": float(count),
-        "mean": round(sum(prices)) / count,
+        "mean": round((sum(prices)) / count,2),
         "min": float(min(prices)),
         "max": float(max(prices))}
 
 def main() -> None:
     """Точка входа."""
     raw = generate_prices()
-    filtered = filter_outlires(raw)
+    filtered = filter_outliers(raw)
     stats = calculate_stats(filtered)
     print(f"📊 Статистика: {stats}")
 

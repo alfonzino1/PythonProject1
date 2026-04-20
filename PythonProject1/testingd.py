@@ -14,8 +14,6 @@
 Проверить, делится ли эта длина на 2.
 Собрать подходящие длины в новый список и вернуть его.
 """
-from collections import Counter
-
 """
 import string
 
@@ -29,9 +27,6 @@ def get_even_length(text: str) -> list[int]:
             result.append(len(word))
     return result
 """
-
-
-
 """
 функция get_even_length(с параметрами text: srt строка) аннотацию типу List[int]
 создаётся пустой словарь result = []
@@ -42,7 +37,6 @@ if len(word) % 2 == 0:
 и то что подходит под условия пишет в словарь result
 и в конце функция через метод retunr выводит результат глобально
 """
-
 """
 Ты отлично стараешься формулировать логику вслух — это важный шаг для закрепления. Но в описании есть 4 технических неточности, которые нужно чётко разделить, иначе дальше будет путаница в терминах и типах данных.
 🔍 Разбор по пунктам:
@@ -54,8 +48,6 @@ if len(word) % 2 == 0:
 "Функция принимает строку. Делит её на слова. Для каждого слова вычисляет длину. Если длина делится на 2 без остатка → это число добавляется в пустой список. В конце список возвращается вызывающему коду."
 Теперь картина чистая. Ты понимаешь разницу между данными и операциями над ними
 """
-
-
 """
 Напиши функцию find_duplicates(numbers: list[int]) -> dict[int, int], которая:
 Принимает список целых чисел.
@@ -106,7 +98,186 @@ spisok = [x * 2 for x in unique]
 print(spisok)
 
 """
-from collections import Counter
-def count_words(text: str) -> dict[int, int]:
+"""
+def safe_divide(a: str, b: str) -> float | None:
+    try:
+        return float(a) / float(b)
+    except ZeroDivisionError:
+        print("[LOG] Ошибка: деление на ноль")
+        return None
+    except ValueError:
+        print('[LOG] Ошибка: передано не число')
+        return None
+    finally:
+        print("[LOG] Операция завершена")
+safe_divide("10", "2")
+safe_divide("10", "0")
+safe_divide("abc", "2")
+safe_divide("5", "3")
+
+"""
+
+"""
+with open("notes.txt", "w", encoding="utf-8") as f:
+    f.write("Привет, мир!")
+# файл закрылся сам, даже если бы код ниже вызвал ошибку
+образец
+with open('text.txt',"w" ,encoding="utf-8") as file:
+    file.write("data")
+with open('text.txt',"r" ,encoding="utf-8") as file:
+    print(len(file.read()))
+"""
+"""
+def write_and_read(data: str, path: str) -> int:
+    with open(path,"w", encoding="utf-8") as file:
+        file.write(data)
+    with open(path,"r",encoding="utf-8") as file:
+        return len(file.read())
+
+"""
+
+
+
+"""
+import string
+import json
+from _datetime import datetime
+def save_dict_to_json(data: dict, path: str) -> bool:
+    try:
+        with open(path, "w", encoding="utf-8") as file:
+            json.dump(data, file, ensure_ascii=False, indent=2)
+
+            return True
+    except TypeError:
+        print("[LOG] Ошибка: данные не нереализуемы")
+        return False
+def read_input(path: str) -> str | None:
+    try:
+        with open(path, "r", encoding="utf-8") as file:
+            return file.read()
+    except FileNotFoundError:
+        print("[LOG] Ошибка: файл не найден")
+        return None
+    except PermissionError:
+        print("[LOG] Ошибка: нет прав на чтение")
+        return None
+    except Exception as e:
+        print(f"[LOG] Ошибка: {e}")
+        return None
+def count_words(text: str) -> dict[str, int]:
     text = text.lower()
+    for tochka in string.punctuation:
+        text = text.replace(tochka, '')
+
+    words = text.split()
+
+    counts = {}
+    for word in words:
+        counts[word] = counts.get(word, 0) + 1
+    report = []
+    report["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+def main() -> None:
+    print("[LOG] Старт анализа текста")
+    text = read_input("input.txt")
+    if text is None:
+        print("[LOG] Чтение отменено")
+        return
+    print("[LOG] Чтение завершено. Начинаю обработку")
+    counts = count_words(text)
+    print("[LOG] Подсчёт завершён. Сохраняю результат")
+
+    success = save_dict_to_json(counts, "output.json")
+    if success:
+        print("[LOG] Готово! Результат в output.json")
+    else:
+        print("[LOG] Ошибка сохранения")
+if __name__ == "__main__":
+    main()
+"""
+
+import string
+import json
+from datetime import datetime
+import logging
+
+logging.basicConfig(
+    filename="app.log",
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)-8s | %(message)s",
+    encoding="utf-8"
+)
+
+def read_input(path: str) -> str | None:
+    """Безопасно читает текст из файла."""
+    try:
+        with open(path, "r", encoding="utf-8") as file:
+            return file.read()
+    except FileNotFoundError:
+        logging.error("[LOG] Ошибка: файл не найден")
+        return None
+    except PermissionError:
+        logging.error("[LOG] Ошибка: нет прав на чтение")
+        return None
+    except Exception as e:
+        logging.error(f"[LOG] Ошибка: {e}")
+        return None
+
+
+def count_words(text: str) -> dict[str, int]:
+    """Считает частоту слов без учёта регистра и знаков препинания."""
+    text = text.lower()
+    for punct in string.punctuation:
+        text = text.replace(punct, '')
+
+    words = text.split()
+    counts = {}
+    for word in words:
+        counts[word] = counts.get(word, 0) + 1
+    return counts
+
+
+def save_dict_to_json(data: dict, path: str) -> bool:
+    """Сохраняет словарь в JSON с обработкой ошибок сериализации."""
+    try:
+        with open(path, "w", encoding="utf-8") as file:
+            json.dump(data, file, ensure_ascii=False, indent=2)
+            return True
+    except TypeError:
+        logging.error("[LOG] Ошибка: данные не сериализуемы")
+        return False
+
+
+def main() -> None:
+    """Точка входа. Собирает пайплайн: чтение → подсчёт → отчёт → сохранение."""
+    logging.info("[LOG] Старт анализа текста")
+
+    text = read_input("input.txt")
+    if text is None:
+        logging.error("[LOG] Чтение отменено")
+        return
+
+    logging.info("[LOG] Чтение завершено. Начинаю обработку")
+    counts = count_words(text)
+
+    logging.info("[LOG] Подсчёт завершён. Сохраняю результат")
+
+    # Сборка финального отчёта по ТЗ
+    sorted_pairs = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+    top_3 = [{"word": w, "count": c} for w, c in sorted_pairs[:3]]
+
+    report = {
+        "processed_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "total_words": sum(counts.values()),
+        "top_3": top_3
+    }
+
+    success = save_dict_to_json(report, "output.json")
+    if success:
+        logging.info("[LOG] Готово! Результат в output.json")
+    else:
+        logging.error("[LOG] Ошибка сохранения")
+
+
+if __name__ == "__main__":
+    main()
 

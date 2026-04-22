@@ -1,7 +1,7 @@
 import random
 import logging
 
-logging.basicConfig(level=logging.INFO, format="%(message)s",filename="def.log",filemode="a+")
+logging.basicConfig(level=logging.INFO, format="%(message)s", filename="def.log", filemode="a+")
 
 
 def guess_price_game() -> bool:
